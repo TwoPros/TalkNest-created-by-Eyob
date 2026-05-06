@@ -9,6 +9,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -21,10 +22,8 @@
         overflow: hidden;
     }
 
-    /* import font */
     @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap');
 
-    /* modern top bar */
     #topBar {
         background: rgba(18, 22, 40, 0.85);
         backdrop-filter: blur(16px);
@@ -80,7 +79,6 @@
         transform: scale(0.96);
     }
 
-    /* messages container - modern bubbles */
     #messages {
         flex: 1;
         overflow-y: auto;
@@ -91,7 +89,6 @@
         scroll-behavior: smooth;
     }
 
-    /* custom scroll */
     #messages::-webkit-scrollbar {
         width: 5px;
     }
@@ -108,6 +105,7 @@
         display: flex;
         width: 100%;
         margin-bottom: 6px;
+        transition: 0.1s;
     }
 
     .msg {
@@ -121,7 +119,6 @@
         line-height: 1.4;
     }
 
-    /* left message (others) */
     .left-msg {
         background: #262c42;
         border-bottom-left-radius: 5px;
@@ -130,7 +127,6 @@
         border: 0.5px solid #3e4668;
     }
 
-    /* right message (current user) */
     .right-msg {
         background: linear-gradient(115deg, #2b4cce, #1f3a94);
         color: white;
@@ -157,12 +153,8 @@
         font-size: 0.8rem;
     }
 
-    .left-msg .sender-name {
-        color: #b7cdff;
-    }
-    .right-msg .sender-name {
-        color: #d9e6ff;
-    }
+    .left-msg .sender-name { color: #b7cdff; }
+    .right-msg .sender-name { color: #d9e6ff; }
 
     .timestamp {
         font-size: 0.65rem;
@@ -177,6 +169,23 @@
         margin: 4px 0 2px;
     }
 
+    .reply-preview {
+        background: rgba(0,0,0,0.3);
+        border-left: 3px solid #4f7df3;
+        padding: 4px 8px;
+        margin-bottom: 6px;
+        font-size: 0.7rem;
+        border-radius: 12px;
+        color: #bbd4ff;
+    }
+
+    .edited-badge {
+        font-size: 0.6rem;
+        opacity: 0.6;
+        margin-left: 6px;
+        font-style: italic;
+    }
+
     .receipt-status {
         display: inline-flex;
         align-items: center;
@@ -184,27 +193,93 @@
         gap: 4px;
         margin-top: 4px;
         font-size: 0.7rem;
-        letter-spacing: -0.5px;
     }
 
-    .receipt-status span {
-        margin-left: 6px;
-        font-size: 0.8rem;
+    .double-tick { color: #9bd7ff; font-weight: 500; }
+
+    /* ACTION MENU (hold) */
+    .action-menu {
+        position: fixed;
+        background: #1e243f;
+        backdrop-filter: blur(20px);
+        border-radius: 28px;
+        padding: 8px 12px;
+        display: flex;
+        gap: 16px;
+        z-index: 10001;
+        box-shadow: 0 20px 35px -10px black;
+        border: 1px solid rgba(122, 162, 247, 0.6);
+        animation: fadeScale 0.15s ease;
     }
 
-    .double-tick {
-        color: #9bd7ff;
-        font-weight: 500;
+    @keyframes fadeScale {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
     }
 
-    /* input area */
+    .action-btn {
+        background: none;
+        border: none;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 40px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: 0.1s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .action-btn:active { transform: scale(0.94); background: #2e3a5e; }
+    .delete-action { color: #ff8a8a; }
+    .edit-action { color: #aad0ff; }
+    .reply-action { color: #b5ffcf; }
+
+    /* Input area + action bar */
     #inputArea {
         display: flex;
-        gap: 12px;
-        padding: 14px 20px;
+        flex-direction: column;
         background: rgba(12, 15, 28, 0.85);
         backdrop-filter: blur(16px);
         border-top: 1px solid #2c3150;
+    }
+
+    .action-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px 0 20px;
+        gap: 10px;
+        font-size: 0.75rem;
+        background: rgba(0,0,0,0.3);
+    }
+
+    .action-indicator {
+        color: #7aa2f7;
+        background: #0f1424;
+        padding: 5px 12px;
+        border-radius: 30px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cancel-action {
+        background: none;
+        border: none;
+        color: #ff8a8a;
+        font-size: 1.2rem;
+        cursor: pointer;
+        font-weight: bold;
+        padding: 4px 8px;
+    }
+
+    .input-row {
+        display: flex;
+        gap: 12px;
+        padding: 12px 20px 14px 20px;
         align-items: center;
     }
 
@@ -218,13 +293,11 @@
         color: white;
         font-family: inherit;
         outline: none;
-        transition: all 0.2s;
     }
 
     #messageInput:focus {
         border-color: #4f7df3;
         box-shadow: 0 0 0 3px rgba(79, 125, 243, 0.2);
-        background: #0c1122;
     }
 
     #sendBtn {
@@ -234,57 +307,42 @@
         padding: 0 26px;
         height: 46px;
         font-weight: 600;
-        font-size: 0.9rem;
         color: white;
         cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 2px 10px rgba(0, 100, 255, 0.3);
-    }
-
-    #sendBtn:hover {
-        transform: scale(0.96);
-        background: linear-gradient(105deg, #638cfb, #4870e0);
     }
 
     .small-note {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
         text-align: center;
-        padding: 4px;
-        background: #00000030;
-        color: #8b9bcf;
+        padding: 6px;
+        color: #6e7daa;
     }
 
     @media (max-width: 600px) {
         .msg { max-width: 85%; }
-        #topBar { padding: 10px 14px; }
-        .room-badge span:first-child { font-size: 0.8rem; }
-        .room-badge span:last-child { font-size: 0.7rem; }
+        .action-btn { padding: 6px 12px; font-size: 0.75rem; }
     }
 </style>
 </head>
 <body>
 
 <div id="topBar">
-    <div class="room-badge">
-        <span>🏠 nest</span>
-        <span id="roomInfo">—</span>
-        <span>👤 <span id="userInfo">—</span></span>
-    </div>
+    <div class="room-badge"><span>🏠 nest</span><span id="roomInfo">—</span><span>👤 <span id="userInfo">—</span></span></div>
     <button id="deleteRoom">🗑 dissolve room</button>
 </div>
-
 <div id="messages"></div>
-
 <div id="inputArea">
-    <input id="messageInput" placeholder="Type your message..." autocomplete="off">
-    <button id="sendBtn">➤ Send</button>
+    <div id="actionBarContainer" class="action-bar" style="display: none;"></div>
+    <div class="input-row">
+        <input id="messageInput" placeholder="Type your message..." autocomplete="off">
+        <button id="sendBtn">➤ Send</button>
+    </div>
+    <div class="small-note">🖱️ Hold message → reply / edit (yours) / delete (yours) · ✔️✔️ seen receipts</div>
 </div>
-<div class="small-note">✔️ seen receipts: double check when others view your message</div>
 
 <script type="module">
-    // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, set, ref, push, onValue, remove, update, get, child, onChildAdded, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    import { getDatabase, ref, push, onValue, remove, update, get, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAbWxvnQYU3APJ4jLuD-mqErVaWkvm7_uY",
@@ -294,243 +352,284 @@
         messagingSenderId: "662966226921",
         appId: "1:662966226921:web:195bcf44b7e40252e54578"
     };
-
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // ==========================
-    // SESSION VALIDATION
-    // ==========================
+    // Session
     const isJoined = localStorage.getItem("IsJoined");
     const roomId = localStorage.getItem("roomId");
     const userName = localStorage.getItem("userName");
+    if (isJoined !== "true" || !roomId || !userName) window.location.href = "index.html";
 
-    if (isJoined !== "true" || !roomId || !userName) {
-        window.location.href = "index.html";
-    }
-
-    // ==========================
-    // REFERENCES
-    // ==========================
     const messagesRef = ref(db, `TalkNest/${roomId}/messages`);
-    const roomMetaRef = ref(db, `TalkNest/${roomId}`);
-
-    // UI elements
+    const roomRootRef = ref(db, `TalkNest/${roomId}`);
     const messagesDiv = document.getElementById("messages");
     const messageInput = document.getElementById("messageInput");
     const sendBtn = document.getElementById("sendBtn");
+    const actionBarContainer = document.getElementById("actionBarContainer");
     document.getElementById("roomInfo").innerText = roomId;
     document.getElementById("userInfo").innerText = userName;
 
-    // store seen updates to avoid re-trigger loops
-    let processedMsgIds = new Set();
+    // Global state
+    let readyReply = null;       // stores messageId we are replying to
+    let editReady = null;        // stores messageId & original data for editing
+    let currentMenu = null;      // action menu dom element
+    let holdTimeout = null;
+    let activeMsgElement = null;
 
-    // ==========================
-    // FORMAT TIMESTAMP
-    // ==========================
-    function formatTime(timestamp) {
-        if (!timestamp) return "";
-        const date = new Date(timestamp);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    function formatTime(timestamp) { return timestamp ? new Date(timestamp).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true }) : ""; }
+
+    // Update action bar UI (reply/edit visual)
+    function updateActionBarUI() {
+        if (readyReply || editReady) {
+            actionBarContainer.style.display = "flex";
+            if (readyReply) {
+                actionBarContainer.innerHTML = `<div class="action-indicator">↩️ Replying to message <span style="color:#9bbaff;">#${readyReply.slice(-6)}</span></div>
+                    <button class="cancel-action" id="cancelReplyBtn">✖ Cancel</button>`;
+                document.getElementById("cancelReplyBtn")?.addEventListener("click", () => { readyReply = null; updateActionBarUI(); });
+            } else if (editReady) {
+                actionBarContainer.innerHTML = `<div class="action-indicator">✏️ Editing message <span style="color:#9bbaff;">#${editReady.slice(-6)}</span></div>
+                    <button class="cancel-action" id="cancelEditBtn">✖ Cancel</button>`;
+                document.getElementById("cancelEditBtn")?.addEventListener("click", () => { editReady = null; updateActionBarUI(); messageInput.value = ""; messageInput.focus(); });
+            }
+        } else {
+            actionBarContainer.style.display = "none";
+            actionBarContainer.innerHTML = "";
+        }
     }
 
-    // ==========================
-    // UPDATE SEEN STATUS (when a message is visible to current user)
-    // For each message that is NOT from me and seen === false -> mark as seen = true
-    // ==========================
+    // remove action menu
+    function removeMenu() { if (currentMenu) { currentMenu.remove(); currentMenu = null; } }
+    function clearHoldTimer() { if (holdTimeout) { clearTimeout(holdTimeout); holdTimeout = null; } }
+
+    // Show action menu at coordinates
+    function showActionMenu(x, y, messageElement, msgId, isOwnMessage, originalText) {
+        removeMenu();
+        const menu = document.createElement("div");
+        menu.className = "action-menu";
+        menu.style.left = `${x}px`;
+        menu.style.top = `${y - 50}px`;
+        
+        // reply always available
+        const replyBtn = document.createElement("button");
+        replyBtn.innerHTML = "💬 Reply";
+        replyBtn.className = "action-btn reply-action";
+        replyBtn.onclick = (e) => { e.stopPropagation(); readyReply = msgId; editReady = null; updateActionBarUI(); removeMenu(); messageInput.focus(); };
+        menu.appendChild(replyBtn);
+        
+        if (isOwnMessage) {
+            const editBtn = document.createElement("button");
+            editBtn.innerHTML = "✏️ Edit";
+            editBtn.className = "action-btn edit-action";
+            editBtn.onclick = (e) => { e.stopPropagation(); 
+                editReady = msgId; readyReply = null; 
+                // set input value to current message text for editing
+                const currentTextElement = messageElement.querySelector('.msg-text');
+                if (currentTextElement) messageInput.value = currentTextElement.innerText;
+                updateActionBarUI(); removeMenu(); messageInput.focus(); 
+            };
+            menu.appendChild(editBtn);
+            
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "🗑 Delete";
+            deleteBtn.className = "action-btn delete-action";
+            deleteBtn.onclick = async (e) => { e.stopPropagation(); 
+                if (confirm("Delete this message?")) {
+                    await remove(ref(db, `TalkNest/${roomId}/messages/${msgId}`));
+                }
+                removeMenu(); 
+            };
+            menu.appendChild(deleteBtn);
+        }
+        
+        document.body.appendChild(menu);
+        currentMenu = menu;
+        const closeHandler = (e) => { if (!menu.contains(e.target)) { removeMenu(); document.removeEventListener('click', closeHandler); } };
+        setTimeout(() => document.addEventListener('click', closeHandler), 10);
+    }
+
+    // Attach hold events to each message wrapper
+    function attachHoldEvents(wrapper, msgId, isOwn, originalText) {
+        let pressTimer = null;
+        let startX = 0, startY = 0;
+        
+        const handleStart = (e) => {
+            if (e.touches) { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }
+            else { startX = e.clientX; startY = e.clientY; }
+            pressTimer = setTimeout(() => {
+                const msgElement = wrapper.querySelector('.msg');
+                let clientX = startX, clientY = startY;
+                if (e.touches) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
+                else if (e.clientX) { clientX = e.clientX; clientY = e.clientY; }
+                showActionMenu(clientX, clientY, wrapper, msgId, isOwn, originalText);
+                pressTimer = null;
+            }, 500);
+        };
+        
+        const handleEnd = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
+        const handleMove = (e) => {
+            if (!pressTimer) return;
+            let currentX, currentY;
+            if (e.touches) { currentX = e.touches[0].clientX; currentY = e.touches[0].clientY; }
+            else { currentX = e.clientX; currentY = e.clientY; }
+            if (Math.hypot(currentX - startX, currentY - startY) > 10) { clearTimeout(pressTimer); pressTimer = null; }
+        };
+        
+        wrapper.addEventListener('mousedown', handleStart);
+        wrapper.addEventListener('mouseup', handleEnd);
+        wrapper.addEventListener('mouseleave', handleEnd);
+        wrapper.addEventListener('mousemove', handleMove);
+        wrapper.addEventListener('touchstart', handleStart, { passive: false });
+        wrapper.addEventListener('touchend', handleEnd);
+        wrapper.addEventListener('touchmove', handleMove);
+    }
+
+    // Mark messages seen
     async function markMessagesAsSeen() {
-        if (!roomId) return;
-        const allMsgsRef = ref(db, `TalkNest/${roomId}/messages`);
-        const snapshot = await get(allMsgsRef);
+        const snapshot = await get(ref(db, `TalkNest/${roomId}/messages`));
         if (!snapshot.exists()) return;
-        
-        const messages = snapshot.val();
         const updates = {};
-        
-        for (const [msgId, msgData] of Object.entries(messages)) {
-            // if message is from OTHER person and seen flag is false or undefined
+        Object.entries(snapshot.val()).forEach(([msgId, msgData]) => {
             if (msgData.from !== userName && (msgData.seen === false || msgData.seen === undefined)) {
                 updates[`TalkNest/${roomId}/messages/${msgId}/seen`] = true;
             }
-        }
-        
-        if (Object.keys(updates).length > 0) {
-            await update(ref(db), updates);
-        }
+        });
+        if (Object.keys(updates).length) await update(ref(db), updates);
     }
 
-    // ==========================
-    // RENDER MESSAGES (with seen indicator & timestamp)
-    // ==========================
+    // Render messages with reply preview, edited flag
     function renderMessages(snapshot) {
-        if (!snapshot.exists()) {
-            messagesDiv.innerHTML = '<div style="text-align:center;opacity:0.5;margin-top:2rem;">✨ no messages yet — send the first whisper ✨</div>';
-            return;
-        }
-        
+        if (!snapshot.exists()) { messagesDiv.innerHTML = '<div style="text-align:center;opacity:0.5;margin-top:2rem;">✨ no messages yet ✨</div>'; return; }
         const messages = snapshot.val();
         const sorted = Object.entries(messages).sort((a,b) => (a[1].time || 0) - (b[1].time || 0));
-        
         let html = '';
+        const msgMap = messages;
+        
+        window.copyText = async (event) => {  
+          let element = event.target;
+          element = element.querySelector(".msg-text");
+          const textToCopy = element.innerText;
+
+          try {
+            // 2. Use the modern Clipboard API
+            await navigator.clipboard.writeText(textToCopy);
+    
+            // 3. Always give feedback (Vital for UX)            
+            element.style.color = "green"; 
+            setTimeout(() => { element.style.color = ""; }, 1000);
+
+          } catch (err) {
+            console.error("Failed to copy: ", err);
+          }
+        }
+        
         for (const [msgId, msg] of sorted) {
             const isOwn = (msg.from === userName);
-            const msgTime = msg.time || Date.now();
-            const timeStr = formatTime(msgTime);
-            const seenStatus = msg.seen === true; // true = already seen by at least one person (other)
-            
-            // Escape text for XSS safety
-            const safeText = (msg.text || '').replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-            
-            // receipt indicator: for my messages, show double check ✔️ if seen === true else single check (sent)
+            const timeStr = formatTime(msg.time);
+            const seenStatus = msg.seen === true;
+            const safeText = escapeHtml(msg.text || '');
+            const editedFlag = msg.edited === true ? `<span class="edited-badge">(edited)</span>` : '';
             let receiptHtml = '';
-            if (isOwn) {
-                if (seenStatus) {
-                    receiptHtml = `<div class="receipt-status"><span class="double-tick">✔️✔️ Seen</span></div>`;
-                } else {
-                    receiptHtml = `<div class="receipt-status"><span>✔️ Sent</span></div>`;
-                }
+            if (isOwn) receiptHtml = `<div class="receipt-status">${seenStatus ? '<span class="double-tick">✔️✔️ Seen</span>' : '<span>✔️ Sent</span>'}</div>`;
+            
+            let replyPreviewHtml = '';
+            if (msg.repliedFrom && msgMap[msg.repliedFrom]) {
+                const parentMsg = msgMap[msg.repliedFrom];
+                const parentText = parentMsg.text.length > 50 ? parentMsg.text.slice(0, 50)+'...' : parentMsg.text;
+                replyPreviewHtml = `<div class="reply-preview">↩️ Replying to ${escapeHtml(parentMsg.from)}: “${escapeHtml(parentText)}”</div>`;
             }
             
-            // different alignment: flex wrapper with right-msg using margin-left auto
             const msgClass = isOwn ? 'right-msg' : 'left-msg';
-            // wrapper structure: left/right container
             html += `
-                <div class="msg-wrapper" data-msgid="${msgId}" style="justify-content: ${isOwn ? 'flex-end' : 'flex-start'};">
+                <div class="msg-wrapper" ondblclick="copyText(event)" data-msgid="${msgId}" style="justify-content: ${isOwn ? 'flex-end' : 'flex-start'};">
                     <div class="msg ${msgClass}">
                         <div class="msg-header">
                             <span class="sender-name">${escapeHtml(msg.from)}</span>
-                            <span class="timestamp">${timeStr}</span>
+                            <span class="timestamp">${timeStr} ${editedFlag}</span>
                         </div>
+                        ${replyPreviewHtml}
                         <div class="msg-text">${safeText}</div>
                         ${receiptHtml}
                     </div>
                 </div>
             `;
+            
         }
-        
         messagesDiv.innerHTML = html;
-        // auto-scroll to bottom
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
         
-        // after render, mark messages as seen (background)
-        setTimeout(() => {
-            markMessagesAsSeen();
-        }, 300);
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
+        // attach hold events to each wrapper
+        document.querySelectorAll('.msg-wrapper').forEach(wrapper => {
+            const msgId = wrapper.dataset.msgid;
+            if (msgId && messages[msgId]) {
+                const isOwnMsg = messages[msgId].from === userName;
+                const originalText = messages[msgId].text;
+                attachHoldEvents(wrapper, msgId, isOwnMsg, originalText);
+            }
         });
+        
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        setTimeout(() => markMessagesAsSeen(), 200);
     }
-
-    // ==========================
-    // LISTEN TO REAL-TIME MESSAGES (with onValue for seen toggle)
-    // ==========================
-    let isFirstLoad = true;
-    onValue(messagesRef, (snapshot) => {
-        renderMessages(snapshot);
-        // after first render also mark unseen messages as seen for others
-        if (!isFirstLoad) {
-            // additional mark after each update to ensure seen status sync
-            setTimeout(() => markMessagesAsSeen(), 200);
-        }
-        isFirstLoad = false;
-    });
     
-    // ==========================
-    // SEND MESSAGE + with 'seen' default false
-    // ==========================
-    async function sendMessage() {
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+    
+    // listen realtime
+    onValue(messagesRef, (snapshot) => { renderMessages(snapshot); });
+    
+    // SEND logic: handles reply, edit, or normal
+    async function sendMessageHandler() {
         const text = messageInput.value.trim();
         if (!text) return;
         
-        // Create new message with seen: false (default)
+        // EDIT MODE
+        if (editReady) {
+            const editMsgRef = ref(db, `TalkNest/${roomId}/messages/${editReady}`);
+            const snap = await get(editMsgRef);
+            if (snap.exists() && snap.val().from === userName) {
+                await update(editMsgRef, { text: text, edited: true, time: Date.now() });
+                messageInput.value = "";
+                editReady = null;
+                updateActionBarUI();
+                messageInput.focus();
+            } else { alert("Cannot edit: message not found or not yours"); editReady = null; updateActionBarUI(); }
+            return;
+        }
+        
+        // Normal or reply
         const newMsgRef = push(messagesRef);
-        const msgPayload = {
-            from: userName,
-            text: text,
-            time: Date.now(),
-            seen: false      // unseen by default, will be flipped when other user sees them
-        };
-        
-        await set(newMsgRef, msgPayload);
-        messageInput.value = '';
+        const payload = { from: userName, text: text, time: Date.now(), seen: false };
+        if (readyReply) { payload.repliedFrom = readyReply; }
+        await set(newMsgRef, payload);
+        if (readyReply) readyReply = null;
+        updateActionBarUI();
+        messageInput.value = "";
         messageInput.focus();
-        
-        // scroll after message sent
-        setTimeout(() => {
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }, 50);
     }
     
-    sendBtn.addEventListener("click", sendMessage);
-    messageInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
+    sendBtn.addEventListener("click", sendMessageHandler);
+    messageInput.addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); sendMessageHandler(); } });
     
-    // ==========================
-    // DELETE ROOM (host / creator only): but anyway confirm and remove
-    // ==========================
-    const roomRootRef = ref(db, `TalkNest/${roomId}`);
+    // Delete room (room dissolved)
     document.getElementById("deleteRoom").addEventListener("click", async () => {
-        const confirmDelete = confirm("⚠️ This will permanently delete the entire room and all messages.\nOnly the host or any participant with caution can delete.\nAre you sure you want to dissolve the nest?");
-        if (!confirmDelete) return;
-        
-        try {
+        if (confirm("⚠️ Permanently delete entire room?")) {
             await remove(roomRootRef);
             localStorage.clear();
             window.location.href = "index.html";
-        } catch (err) {
-            alert("Error deleting room: " + err.message);
         }
     });
     
-    // optional: if the room gets deleted while user active, redirect
-    function checkRoomExistsPeriodically() {
-        const roomCheck = ref(db, `TalkNest/${roomId}`);
-        onValue(roomCheck, (snap) => {
-            if (!snap.exists()) {
-                alert("Room has been deleted by the host. Redirecting...");
-                localStorage.clear();
-                window.location.href = "index.html";
-            }
-        });
-    }
-    checkRoomExistsPeriodically();
+    // check if room deleted
+    onValue(ref(db, `TalkNest/${roomId}`), (snap) => { if (!snap.exists()) { alert("Room deleted by host."); localStorage.clear(); window.location.href = "index.html"; } });
     
-    // also trigger seen update on visibility change / when user focuses tab
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "visible") {
-            markMessagesAsSeen();
-        }
-    });
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") markMessagesAsSeen(); });
+    window.addEventListener("focus", () => markMessagesAsSeen());
+    setTimeout(() => markMessagesAsSeen(), 600);
     
-    window.addEventListener("focus", () => {
-        markMessagesAsSeen();
-    });
+    // Additional tap outside menu removal
+    window.addEventListener('click', (e) => { if (currentMenu && !currentMenu.contains(e.target)) removeMenu(); });
     
-    // initial mark after load
-    setTimeout(() => {
-        markMessagesAsSeen();
-    }, 800);
-    
-    // small style adjust: fix right message not aligning: we used justify-content: flex-end wrapper for own msgs, great!
-    console.log("TalkNest chat upgraded: timestamps, seen receipts (✔️✔️), right alignment fixed");
+    updateActionBarUI();
+    console.log("TalkNest loaded: reply, edit, delete, hold actions active");
 </script>
 </body>
 </html>
