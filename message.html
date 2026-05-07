@@ -205,6 +205,7 @@
         border-radius: 28px;
         padding: 8px 12px;
         display: flex;
+        flex-direction: column;
         gap: 16px;
         z-index: 10001;
         box-shadow: 0 20px 35px -10px black;
@@ -359,6 +360,7 @@
     const isJoined = localStorage.getItem("IsJoined");
     const roomId = localStorage.getItem("roomId");
     const userName = localStorage.getItem("userName");
+    const isHost = localStorage.getItem("isHost");
     if (isJoined !== "true" || !roomId || !userName) window.location.href = "index.html";
 
     const messagesRef = ref(db, `TalkNest/${roomId}/messages`);
@@ -580,6 +582,7 @@
     async function sendMessageHandler() {
         const text = messageInput.value.trim();
         if (!text) return;
+        if (userName == "Guest") return;
         
         // EDIT MODE
         if (editReady) {
@@ -611,7 +614,11 @@
     
     // Delete room (room dissolved)
     document.getElementById("deleteRoom").addEventListener("click", async () => {
-        if (confirm("⚠️ Permanently delete entire room?")) {
+        if(isHost == "false"){
+            alert("only Host or creater can delete!")
+            return;
+        } 
+        if (confirm("⚠️ Permanently delete entire room?")) {           
             await remove(roomRootRef);
             localStorage.clear();
             window.location.href = "index.html";
@@ -629,7 +636,11 @@
     window.addEventListener('click', (e) => { if (currentMenu && !currentMenu.contains(e.target)) removeMenu(); });
     
     updateActionBarUI();
-    console.log("TalkNest loaded: reply, edit, delete, hold actions active");
+    if(userName == "Guest") {        
+        messageInput.disabled = true;
+        sendBtn.disabled = true;
+        document.querySelector(".small-note").textContent = "Guests can only see the message. you can't write message!!! ";
+    }
 </script>
 </body>
 </html>
