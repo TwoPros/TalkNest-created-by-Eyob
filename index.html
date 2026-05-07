@@ -496,7 +496,9 @@
 		            const btn = document.createElement("button");
 		            btn.textContent = name;
 		            btn.className = "name-btn";
-		
+		            
+		            if(name == "Guest")  return;		         		            		                   
+		           
 		            // IF NAME ALREADY TAKEN
 		            if (info.isPhoneGetted === true) {
 		
