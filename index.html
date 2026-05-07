@@ -460,70 +460,87 @@
     };
 
     // Enhanced name selection modal (filters based on otherMemberAgree flag)
-    async function showNamesWithFilter(roomNamesArray, allowOtherMembers) {
-        return new Promise((resolve) => {
-            let availableNames = [...roomNamesArray];
-            if (!allowOtherMembers) {
-                // only predefined names can be selected
-                if (availableNames.length === 0) {
-                    alert("This room restricts membership to specific participants only, but no names are defined. Contact host.");
-                    resolve(null);
-                    return;
-                }
-            } else {
-                // if allowOtherMembers is true, we still show the original names but also allow custom? 
-                // Actually requirement: "show other member to choice" – meaning if otherMemberAgree true, 
-                // we display the stored participant list (same as always). The checkbox is about whether NEW people can join.
-                // But for UI clarity we'll keep the exact behavior: show stored names from DB.
-                // If no names stored we show a fallback but normally there will be names.
-                if (availableNames.length === 0) {
-                    availableNames = ["Guest"];
-                }
-            }
-            
-            const uniqueNames = [...new Map(availableNames.map(n => [n.trim().toLowerCase(), n.trim()])).values()];
-            if (uniqueNames.length === 0) {
-                alert("No participant names available for this nest.");
-                resolve(null);
-                return;
-            }
-
-            const bg = document.createElement("div");
-            bg.className = "modal-bg";
-
-            const modal = document.createElement("div");
-            modal.className = "modal";
-
-            const title = document.createElement("h3");
-            title.textContent = "choose your identity";
-
-            const subtitle = document.createElement("p");
-            subtitle.textContent = allowOtherMembers ? "select your profile to enter" : "restricted access: pick your assigned name";
-
-            modal.appendChild(title);
-            modal.appendChild(subtitle);
-
-            const nameContainer = document.createElement("div");
-            nameContainer.className = "name-grid";
-
-            uniqueNames.forEach(rawName => {
-                const displayName = rawName;
-                const btn = document.createElement("button");
-                btn.textContent = displayName;
-                btn.className = "name-btn";
-
-                btn.onclick = () => {
-                    document.body.removeChild(bg);
-                    resolve(displayName);
-                };
-                nameContainer.appendChild(btn);
-            });
-
-            modal.appendChild(nameContainer);
-            bg.appendChild(modal);
-            document.body.appendChild(bg);
-        });
-    }
+		async function showNamesWithFilter(namesObj, allowOtherMembers) {
+		    return new Promise((resolve) => {
+		
+		        // Safety check
+		        if (!namesObj || typeof namesObj !== "object") {
+		            alert("No participant data found.");
+		            resolve(null);
+		            return;
+		        }
+		
+		        const bg = document.createElement("div");
+		        bg.className = "modal-bg";
+		
+		        const modal = document.createElement("div");
+		        modal.className = "modal";
+		
+		        const title = document.createElement("h3");
+		        title.textContent = "choose your identity";
+		
+		        const subtitle = document.createElement("p");
+		        subtitle.textContent = allowOtherMembers
+		            ? "select your profile to enter"
+		            : "restricted access: pick your assigned name";
+		
+		        modal.appendChild(title);
+		        modal.appendChild(subtitle);
+		
+		        const nameContainer = document.createElement("div");
+		        nameContainer.className = "name-grid";
+		
+		        // LOOP THROUGH FULL OBJECT
+		        Object.entries(namesObj).forEach(([name, info]) => {
+		
+		            const btn = document.createElement("button");
+		            btn.textContent = name;
+		            btn.className = "name-btn";
+		
+		            // IF NAME ALREADY TAKEN
+		            if (info.isPhoneGetted === true) {
+		
+		                btn.disabled = true;
+		
+		                btn.style.opacity = "0.4";
+		                btn.style.cursor = "not-allowed";
+		                btn.style.background = "#2a2a2a";
+		                btn.style.borderColor = "#555";
+		                btn.style.color = "#888";
+		
+		            } else {
+		
+		                // AVAILABLE NAME
+		                btn.onclick = () => {
+		                    document.body.removeChild(bg);
+		                    resolve(name);
+		                };
+		
+		            }
+		
+		            nameContainer.appendChild(btn);
+		        });
+		
+		        // OPTIONAL GUEST BUTTON
+		        if (allowOtherMembers) {
+		
+		            const guestBtn = document.createElement("button");
+		            guestBtn.textContent = "Guest";
+		            guestBtn.className = "name-btn";
+		
+		            guestBtn.onclick = () => {
+		                document.body.removeChild(bg);
+		                resolve("Guest");
+		            };
+		
+		            nameContainer.appendChild(guestBtn);
+		        }
+		
+		        modal.appendChild(nameContainer);
+		        bg.appendChild(modal);
+		        document.body.appendChild(bg);
+		    });
+		}
 
     // HOST with enhanced structure: names array become objects { isOnline, isCreator, isPhoneGetted }
     async function hostRoom(roomId, rawNamesArray, password, otherMemberAgree) {
@@ -555,9 +572,9 @@
         const namesObj = {};
         cleanNames.forEach((name, idx) => {
             namesObj[name] = {
-                isOnline: false,
+                isOnline: idx === 0,
                 isCreator: idx === 0,      // first name is creator (host)
-                isPhoneGetted: false
+                isPhoneGetted: idx === 0
             };
         });
 
@@ -634,7 +651,7 @@
         }
 
         // Show identity picker
-        const chosenName = await showNamesWithFilter(availableNamesForSelection, allowOther);
+        const chosenName = await showNamesWithFilter(namesObj, allowOther);
         if (!chosenName) return;
 
         // Additional check for restricted mode: ensure chosen name exists in DB names
