@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>TalkNest · immersive portal</title>
+    <title>TalkNest · secure portal</title>
     <!-- Google Fonts + smooth reset -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
@@ -24,14 +24,12 @@
             padding: 1.5rem;
         }
 
-        /* glassmorphic container */
         .portal {
             max-width: 1300px;
             width: 100%;
             margin: 0 auto;
         }
 
-        /* header with animated gradient */
         .hero {
             text-align: center;
             margin-bottom: 3rem;
@@ -57,7 +55,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* two column layout for host/join */
         .rooms-grid {
             display: flex;
             flex-wrap: wrap;
@@ -217,7 +214,31 @@
             color: #4c5780;
         }
 
-        /* modal redesign - crisp glass */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 1rem 0 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: #4f7df3;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            margin: 0;
+            font-size: 0.85rem;
+            text-transform: none;
+            letter-spacing: normal;
+            cursor: pointer;
+            color: #cbd5ff;
+        }
+
         .modal-bg {
             position: fixed;
             top: 0;
@@ -301,7 +322,6 @@
             box-shadow: 0 5px 12px rgba(0,0,0,0.3);
         }
 
-        /* responsive */
         @media (max-width: 780px) {
             .hero h1 { font-size: 2.7rem; }
             .card { padding: 1.5rem; }
@@ -315,22 +335,35 @@
             padding: 4px 10px;
             font-size: 0.7rem;
             margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-       .host-card{display: none;}
+        .asker:hover {
+            background: rgba(255,255,240,0.12);
+        }
+        .host-card { display: none; }
+        .join-card { display: block; }
+        
+        .password-strength {
+            font-size: 0.7rem;
+            margin-top: 0.3rem;
+            margin-left: 0.8rem;
+            color: #7aa2f7;
+        }
     </style>
 </head>
 <body>
 <div class="portal">
     <div class="hero">
         <h1>TalkNest ✦</h1>
-        <div class="tagline">prismatic voice rooms · ephemeral connections</div>
+        <div class="tagline">encrypted voice nests · password protected rooms</div>
         <div class="badge-tag" style="margin-top: 1rem;">
-            <span>🎙️</span> realtime · private nests
+            <span>🔐</span> secure · private nests
         </div>
     </div>
 
     <div class="rooms-grid">
-        <!-- HOST CARD -->
+        <!-- HOST CARD (enhanced with password + checkbox) -->
         <div class="card host-card">
             <div class="card-header">
                 <span>🪹</span>
@@ -342,22 +375,29 @@
                 <div class="helper-text">unique, shareable identifier</div>
             </div>
             <div class="input-group">
+                <label>🔒 room password</label>
+                <input type="password" id="hostPassword" placeholder="create strong password" autocomplete="off">
+                <div class="helper-text">members must enter this to join</div>
+            </div>
+            <div class="input-group">
                 <label>👥 participant names</label>
                 <input type="text" id="userNames" placeholder="Alex, Sam, Jordan, Casey" autocomplete="off">
-                <div class="helper-text">comma separated · at least 1 name (host first)</div>
+                <div class="helper-text">comma separated · first name = host (creator)</div>
             </div>
-            <button class="btn btn-primary" id="hostSubmit">✨ create room & host</button>
+            <div class="checkbox-container" id="otherMemberCheckboxWrapper">
+                <input type="checkbox" id="otherMemberAgree">
+                <label for="otherMemberAgree">👥 Allow other members to join (if unchecked, only listed members can join)</label>
+            </div>
+            <button class="btn btn-primary" id="hostSubmit">✨ create secure room</button>
             <div class="divider">
                 <div class="divider-line"></div>
                 <span>➕</span>
                 <div class="divider-line"></div>
             </div>
-            <div class="asker" onclick="toJoin()">
-                Do you want to join?
-            </div>           
+            <div class="asker" onclick="toJoin()">🔁 switch to join mode</div>           
         </div>
 
-        <!-- JOIN CARD -->
+        <!-- JOIN CARD (enhanced with password) -->
         <div class="card join-card">
             <div class="card-header">
                 <span>🔗</span>
@@ -368,26 +408,28 @@
                 <input type="text" id="joinRoomId" placeholder="enter room code" autocomplete="off">
                 <div class="helper-text">ask the host for the nest ID</div>
             </div>
+            <div class="input-group">
+                <label>🔐 room password</label>
+                <input type="password" id="joinPassword" placeholder="room password" autocomplete="off">
+                <div class="helper-text">required to access the nest</div>
+            </div>
             <button class="btn btn-primary" id="joinSubmit">🎧 enter conversation</button>
             <div class="divider">
                 <div class="divider-line"></div>
                 <span>🎭</span>
                 <div class="divider-line"></div>
             </div>
-            <div class="asker" onclick="toHost()">
-                do you want to host?
-            </div>
+            <div class="asker" onclick="toHost()">✨ create your own nest</div>
         </div>
     </div>
     <footer>
-        ✦ ephemeral talks · real connections · nest privacy ✦
+        ✦ password-protected rooms · member privacy · hosted with care ✦
     </footer>
 </div>
 
 <script type="module">
-    // Firebase (v9 compat)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+    import { getDatabase, ref, set, get, child, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAbWxvnQYU3APJ4jLuD-mqErVaWkvm7_uY",
@@ -401,30 +443,47 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // redirect guard (already joined)
+    // Redirect if already in a room
     if (localStorage.getItem("IsJoined") === "true") {
         window.location.href = "message.html";
     }
 
-    // ==========================
-    // 🔥 Enhanced MODAL (names selection) – modern animated
-    // ==========================
+    // Toggle visibility host/join cards
     window.toHost = () => {
         document.querySelector(".host-card").style.display = "block";
         document.querySelector(".join-card").style.display = "none";
-    }
+    };
     
     window.toJoin = () => {
         document.querySelector(".join-card").style.display = "block";
         document.querySelector(".host-card").style.display = "none";
-    }
-    
-    function showNames(namesArray) {
+    };
+
+    // Enhanced name selection modal (filters based on otherMemberAgree flag)
+    async function showNamesWithFilter(roomNamesArray, allowOtherMembers) {
         return new Promise((resolve) => {
-            // deduplicate & filter empty names
-            const uniqueNames = [...new Map(namesArray.map(n => [n.trim().toLowerCase(), n.trim()])).values()];
+            let availableNames = [...roomNamesArray];
+            if (!allowOtherMembers) {
+                // only predefined names can be selected
+                if (availableNames.length === 0) {
+                    alert("This room restricts membership to specific participants only, but no names are defined. Contact host.");
+                    resolve(null);
+                    return;
+                }
+            } else {
+                // if allowOtherMembers is true, we still show the original names but also allow custom? 
+                // Actually requirement: "show other member to choice" – meaning if otherMemberAgree true, 
+                // we display the stored participant list (same as always). The checkbox is about whether NEW people can join.
+                // But for UI clarity we'll keep the exact behavior: show stored names from DB.
+                // If no names stored we show a fallback but normally there will be names.
+                if (availableNames.length === 0) {
+                    availableNames = ["Guest"];
+                }
+            }
+            
+            const uniqueNames = [...new Map(availableNames.map(n => [n.trim().toLowerCase(), n.trim()])).values()];
             if (uniqueNames.length === 0) {
-                alert("No valid names available in this room. Please contact host.");
+                alert("No participant names available for this nest.");
                 resolve(null);
                 return;
             }
@@ -436,10 +495,10 @@
             modal.className = "modal";
 
             const title = document.createElement("h3");
-            title.textContent = "choose your essence";
+            title.textContent = "choose your identity";
 
             const subtitle = document.createElement("p");
-            subtitle.textContent = "select an identity to enter the nest";
+            subtitle.textContent = allowOtherMembers ? "select your profile to enter" : "restricted access: pick your assigned name";
 
             modal.appendChild(title);
             modal.appendChild(subtitle);
@@ -461,32 +520,30 @@
             });
 
             modal.appendChild(nameContainer);
-
-            // subtle cancel X not needed but accessible escape? optional
             bg.appendChild(modal);
             document.body.appendChild(bg);
-
-            // backdrop click not auto close to prevent accidental dismissal
-            // but we keep modal clean
         });
     }
 
-    // ==========================
-    // 🟢 HOST (with improved name validation)
-    // ==========================
-    async function hostRoom(roomId, namesArray) {
+    // HOST with enhanced structure: names array become objects { isOnline, isCreator, isPhoneGetted }
+    async function hostRoom(roomId, rawNamesArray, password, otherMemberAgree) {
         if (!roomId || roomId.trim() === "") {
             alert("Please enter a valid Room ID.");
             return;
         }
+        if (!password || password.trim() === "") {
+            alert("Please set a room password for security.");
+            return;
+        }
         const trimmedRoom = roomId.trim();
-        const cleanNames = namesArray.filter(n => n !== "");
+        const trimmedPassword = password.trim();
+        const cleanNames = rawNamesArray.filter(n => n !== "");
         if (cleanNames.length === 0) {
-            alert("At least one participant name is required (the host name).");
+            alert("At least one participant name (host name) is required.");
             return;
         }
 
-        // check if room already exists?
+        // Check if room already exists
         const roomRefCheck = ref(db, "TalkNest/" + trimmedRoom);
         const snapshot = await get(roomRefCheck);
         if (snapshot.exists()) {
@@ -494,18 +551,34 @@
             return;
         }
 
+        // Build names object: each name gets isOnline: false, isCreator (only first true), isPhoneGetted: false
+        const namesObj = {};
+        cleanNames.forEach((name, idx) => {
+            namesObj[name] = {
+                isOnline: false,
+                isCreator: idx === 0,      // first name is creator (host)
+                isPhoneGetted: false
+            };
+        });
+
+        const roomData = {
+            createdAt: Date.now(),
+            names: namesObj,
+            password: trimmedPassword,
+            otherMemberAgree: otherMemberAgree,
+            messages: {}
+        };
+
         const roomRef = ref(db, "TalkNest/" + trimmedRoom);
         try {
-            await set(roomRef, {
-                createdAt: Date.now(),
-                names: cleanNames,
-                messages: {}
-            });
-
+            await set(roomRef, roomData);
+            
+            // Set localStorage for host (isHost = true)
             localStorage.setItem("IsJoined", "true");
             localStorage.setItem("roomId", trimmedRoom);
             localStorage.setItem("userName", cleanNames[0]);
-
+            localStorage.setItem("isHost", "true");
+            
             window.location.href = "message.html";
         } catch (err) {
             console.error(err);
@@ -513,86 +586,135 @@
         }
     }
 
-    // ==========================
-    // 🔵 JOIN (with modern modal & errors)
-    // ==========================
-    async function joinRoom(roomId) {
+    // JOIN with password verification + conditional name list based on otherMemberAgree and updating isOnline/isPhoneGetted
+    async function joinRoom(roomId, enteredPassword) {
         if (!roomId || roomId.trim() === "") {
             alert("Please provide a Room ID to join.");
             return;
         }
+        if (!enteredPassword || enteredPassword.trim() === "") {
+            alert("Please enter the room password.");
+            return;
+        }
         const trimmedRoom = roomId.trim();
-        const snapshot = await get(child(ref(db), "TalkNest/" + trimmedRoom));
+        const roomSnapshot = await get(child(ref(db), "TalkNest/" + trimmedRoom));
 
-        if (!snapshot.exists()) {
+        if (!roomSnapshot.exists()) {
             alert("❌ Nest not found.\nCheck the Room ID or ask the host to start the room.");
             return;
         }
 
-        const data = snapshot.val();
-        const roomNames = data.names || [];
-
-        if (!roomNames.length) {
-            alert("Room exists but has no participant names set. Please contact host.");
+        const data = roomSnapshot.val();
+        // Verify password
+        if (data.password !== enteredPassword.trim()) {
+            alert("❌ Incorrect password. Access denied.");
             return;
         }
 
-        // Show beautiful identity picker
-        const chosenName = await showNames(roomNames);
-        if (!chosenName) {
-            // if no name selected (e.g., null resolve), do nothing
+        const allowOther = data.otherMemberAgree === true;
+        const namesObj = data.names || {};
+        const predefinedNamesList = Object.keys(namesObj);
+
+        // Determine available names for selection based on otherMemberAgree
+        let availableNamesForSelection = [];
+        if (allowOther) {
+            // Show predefined names (even if empty, fallback)
+            if (predefinedNamesList.length > 0) {
+                availableNamesForSelection = predefinedNamesList;
+            } else {
+                availableNamesForSelection = ["Participant"];
+            }
+        } else {
+            // Restricted: only listed members can join
+            if (predefinedNamesList.length === 0) {
+                alert("This room has no authorized participants. Contact host.");
+                return;
+            }
+            availableNamesForSelection = predefinedNamesList;
+        }
+
+        // Show identity picker
+        const chosenName = await showNamesWithFilter(availableNamesForSelection, allowOther);
+        if (!chosenName) return;
+
+        // Additional check for restricted mode: ensure chosen name exists in DB names
+        if (!allowOther && !namesObj[chosenName]) {
+            alert("You are not authorized to join this restricted nest.");
             return;
         }
 
+        // Update user's status in DB: set isOnline = true, isPhoneGetted = true for this participant
+        const userRef = ref(db, `TalkNest/${trimmedRoom}/names/${chosenName}`);
+        const currentUserDataSnapshot = await get(userRef);
+        let updatedStatus = {
+            isOnline: true,
+            isPhoneGetted: true
+        };
+        if (currentUserDataSnapshot.exists()) {
+            const existing = currentUserDataSnapshot.val();
+            updatedStatus = {
+                ...existing,
+                isOnline: true,
+                isPhoneGetted: true
+            };
+        } else {
+            // If name not existing but allowOther true, we need to dynamically add it with appropriate flags
+            if (allowOther) {
+                updatedStatus = {
+                    isOnline: true,
+                    isCreator: false,
+                    isPhoneGetted: true
+                };
+            } else {
+                alert("Name mismatch in restricted mode.");
+                return;
+            }
+        }
+        await set(userRef, updatedStatus);
+
+        // Store local: isHost = false
         localStorage.setItem("IsJoined", "true");
         localStorage.setItem("roomId", trimmedRoom);
         localStorage.setItem("userName", chosenName);
+        localStorage.setItem("isHost", "false");
 
         window.location.href = "message.html";
     }
 
-    // UI event listeners with slight debounce protection (basic)
+    // Event handlers
     document.getElementById("hostSubmit").onclick = async () => {
-        const hostRoomIdElem = document.getElementById("hostRoomId");
-        const roomId = hostRoomIdElem.value.trim();
+        const roomId = document.getElementById("hostRoomId").value.trim();
+        const password = document.getElementById("hostPassword").value;
         const rawNames = document.getElementById("userNames").value;
+        const otherMemberAgree = document.getElementById("otherMemberAgree").checked;
+        
         let namesArray = rawNames.split(",").map(n => n.trim()).filter(n => n !== "");
-
         if (namesArray.length === 0) {
-            alert("Please list at least one name (host's name) in 'Names comma separated'.");
+            alert("Please list at least one name (host's name) in 'participant names'.");
             return;
         }
-        await hostRoom(roomId, namesArray);
+        await hostRoom(roomId, namesArray, password, otherMemberAgree);
     };
 
     document.getElementById("joinSubmit").onclick = async () => {
-        const joinRoomIdElem = document.getElementById("joinRoomId");
-        const roomId = joinRoomIdElem.value.trim();
-        await joinRoom(roomId);
+        const roomId = document.getElementById("joinRoomId").value.trim();
+        const password = document.getElementById("joinPassword").value;
+        await joinRoom(roomId, password);
     };
 
-    // some small UX: press enter on join and host fields (keyboard friend)
-    const joinInput = document.getElementById("joinRoomId");
-    joinInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById("joinSubmit").click();
-        }
-    });
-    const hostInputId = document.getElementById("hostRoomId");
-    hostInputId.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById("hostSubmit").click();
-        }
-    });
+    // Keyboard accessibility
+    const joinRoomInput = document.getElementById("joinRoomId");
+    const joinPassInput = document.getElementById("joinPassword");
+    joinRoomInput.addEventListener("keypress", (e) => { if (e.key === "Enter") document.getElementById("joinSubmit").click(); });
+    joinPassInput.addEventListener("keypress", (e) => { if (e.key === "Enter") document.getElementById("joinSubmit").click(); });
+    
+    const hostRoomIdInput = document.getElementById("hostRoomId");
+    const hostPassInput = document.getElementById("hostPassword");
     const namesInput = document.getElementById("userNames");
-    namesInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById("hostSubmit").click();
-        }
-    });
+    hostRoomIdInput.addEventListener("keypress", (e) => { if (e.key === "Enter") document.getElementById("hostSubmit").click(); });
+    hostPassInput.addEventListener("keypress", (e) => { if (e.key === "Enter") document.getElementById("hostSubmit").click(); });
+    namesInput.addEventListener("keypress", (e) => { if (e.key === "Enter") document.getElementById("hostSubmit").click(); });
+    
 </script>
 </body>
 </html>
