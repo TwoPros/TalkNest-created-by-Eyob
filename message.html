@@ -1090,7 +1090,7 @@ backBtn.addEventListener("click", async () => {
         
         return;
     }
-await set(ref(db, `TalkNest/${roomId}/${userName}/isPhoneGetted`), false)
+await update(ref(db, `TalkNest/${roomId}/${userName}/isPhoneGetted`), false)
     localStorage.clear();
     window.location.href = "index.html";
 });
