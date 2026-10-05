@@ -1085,12 +1085,12 @@ messageInput.addEventListener("keydown", e => {
       anything from Firebase.
 */
 
-backBtn.addEventListener("click", () => {
+backBtn.addEventListener("click", async () => {
     if (isHost === "true") {
-        window.location.href = "index.html";
+        
         return;
     }
-
+await set(ref(db, `${roomId}/${userName}/isPhoneGetted`), "False")
     localStorage.clear();
     window.location.href = "index.html";
 });
