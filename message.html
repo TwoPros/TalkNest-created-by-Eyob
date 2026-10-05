@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 <title>TalkNest · live whispers</title>
+
 <style>
     * {
         margin: 0;
@@ -13,7 +15,8 @@
     }
 
     body {
-        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+        font-family: 'Inter', system-ui, -apple-system, 'Segoe UI',
+            Roboto, Helvetica, sans-serif;
         background: radial-gradient(circle at 20% 30%, #0b0e17, #020308);
         color: #eef2ff;
         display: flex;
@@ -23,6 +26,10 @@
     }
 
     @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap');
+
+    /* =========================
+       TOP BAR
+    ========================= */
 
     #topBar {
         background: rgba(18, 22, 40, 0.85);
@@ -79,6 +86,10 @@
         transform: scale(0.96);
     }
 
+    /* =========================
+       MESSAGES
+    ========================= */
+
     #messages {
         flex: 1;
         overflow-y: auto;
@@ -92,10 +103,12 @@
     #messages::-webkit-scrollbar {
         width: 5px;
     }
+
     #messages::-webkit-scrollbar-track {
         background: #1a1e2c;
         border-radius: 10px;
     }
+
     #messages::-webkit-scrollbar-thumb {
         background: #4f7df3;
         border-radius: 10px;
@@ -153,8 +166,13 @@
         font-size: 0.8rem;
     }
 
-    .left-msg .sender-name { color: #b7cdff; }
-    .right-msg .sender-name { color: #d9e6ff; }
+    .left-msg .sender-name {
+        color: #b7cdff;
+    }
+
+    .right-msg .sender-name {
+        color: #d9e6ff;
+    }
 
     .timestamp {
         font-size: 0.65rem;
@@ -165,8 +183,19 @@
     .msg-text {
         font-size: 0.95rem;
         font-weight: 450;
+
+        /* IMPORTANT:
+           Keeps multiple lines exactly as typed.
+        */
+        white-space: pre-wrap;
+
         word-break: break-word;
         margin: 4px 0 2px;
+        text-align: left;
+    }
+
+    .right-msg .msg-text {
+        text-align: left;
     }
 
     .reply-preview {
@@ -177,6 +206,7 @@
         font-size: 0.7rem;
         border-radius: 12px;
         color: #bbd4ff;
+        text-align: left;
     }
 
     .edited-badge {
@@ -195,50 +225,88 @@
         font-size: 0.7rem;
     }
 
-    .double-tick { color: #9bd7ff; font-weight: 500; }
+    .double-tick {
+        color: #9bd7ff;
+        font-weight: 500;
+    }
 
-    /* ACTION MENU (hold) */
+    /* =========================
+       CONTEXT / ACTION MENU
+    ========================= */
+
     .action-menu {
         position: fixed;
+        min-width: 165px;
         background: #1e243f;
         backdrop-filter: blur(20px);
-        border-radius: 28px;
-        padding: 8px 12px;
+        border-radius: 12px;
+        padding: 6px;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 2px;
         z-index: 10001;
-        box-shadow: 0 20px 35px -10px black;
-        border: 1px solid rgba(122, 162, 247, 0.6);
-        animation: fadeScale 0.15s ease;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        border: 1px solid rgba(122, 162, 247, 0.45);
+        animation: fadeScale 0.12s ease;
     }
 
     @keyframes fadeScale {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
+        from {
+            opacity: 0;
+            transform: scale(0.92);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
     .action-btn {
-        background: none;
+        width: 100%;
+        background: transparent;
         border: none;
         color: white;
-        padding: 10px 18px;
-        border-radius: 40px;
-        font-weight: 600;
+        padding: 9px 12px;
+        border-radius: 7px;
+        font-weight: 500;
         font-size: 0.85rem;
         cursor: pointer;
-        transition: 0.1s;
+        transition: 0.12s;
         display: flex;
         align-items: center;
-        gap: 6px;
+        gap: 9px;
+        text-align: left;
     }
 
-    .action-btn:active { transform: scale(0.94); background: #2e3a5e; }
-    .delete-action { color: #ff8a8a; }
-    .edit-action { color: #aad0ff; }
-    .reply-action { color: #b5ffcf; }
+    .action-btn:hover {
+        background: rgba(255,255,255,0.08);
+    }
 
-    /* Input area + action bar */
+    .action-btn:active {
+        transform: scale(0.97);
+    }
+
+    .delete-action {
+        color: #ff8a8a;
+    }
+
+    .delete-action:hover {
+        background: rgba(255,70,85,0.15);
+    }
+
+    .edit-action {
+        color: #aad0ff;
+    }
+
+    .reply-action {
+        color: #b5ffcf;
+    }
+
+    /* =========================
+       INPUT AREA
+    ========================= */
+
     #inputArea {
         display: flex;
         flex-direction: column;
@@ -281,19 +349,28 @@
         display: flex;
         gap: 12px;
         padding: 12px 20px 14px 20px;
-        align-items: center;
+        align-items: flex-end;
     }
 
+    /* Changed from input -> textarea */
     #messageInput {
         flex: 1;
         background: #141a2c;
         border: 1px solid #37415e;
-        border-radius: 44px;
+        border-radius: 22px;
         padding: 12px 20px;
         font-size: 0.95rem;
         color: white;
         font-family: inherit;
         outline: none;
+
+        resize: none;
+
+        min-height: 46px;
+        max-height: 160px;
+
+        line-height: 1.4;
+        overflow-y: auto;
     }
 
     #messageInput:focus {
@@ -310,6 +387,11 @@
         font-weight: 600;
         color: white;
         cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    #sendBtn:hover {
+        filter: brightness(1.1);
     }
 
     .small-note {
@@ -319,328 +401,1556 @@
         color: #6e7daa;
     }
 
+    /* =========================
+       MOBILE
+    ========================= */
+
     @media (max-width: 600px) {
-        .msg { max-width: 85%; }
-        .action-btn { padding: 6px 12px; font-size: 0.75rem; }
+
+        .msg {
+            max-width: 85%;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            font-size: 0.75rem;
+        }
+
+        #topBar {
+            padding: 12px;
+        }
+
+        #deleteRoom {
+            padding: 7px 12px;
+            font-size: 0.75rem;
+        }
+
+        .room-badge {
+            gap: 5px;
+            padding: 5px 8px;
+        }
+
+        .input-row {
+            padding: 10px;
+            gap: 8px;
+        }
+
+        #messageInput {
+            padding: 11px 15px;
+        }
+
+        #sendBtn {
+            padding: 0 18px;
+        }
     }
 </style>
 </head>
+
 <body>
 
+<!-- =========================
+     TOP BAR
+========================= -->
+
 <div id="topBar">
-    <div class="room-badge"><span>🏠 nest</span><span id="roomInfo">—</span><span>👤 <span id="userInfo">—</span></span></div>
-    <button id="deleteRoom">🗑 dissolve room</button>
-</div>
-<div id="messages"></div>
-<div id="inputArea">
-    <div id="actionBarContainer" class="action-bar" style="display: none;"></div>
-    <div class="input-row">
-        <input id="messageInput" placeholder="Type your message..." autocomplete="off">
-        <button id="sendBtn">➤ Send</button>
+
+    <div class="room-badge">
+        <span>🏠 nest</span>
+
+        <span id="roomInfo">—</span>
+
+        <span>
+            👤
+            <span id="userInfo">—</span>
+        </span>
     </div>
-    <div class="small-note">🖱️ Hold message → reply / edit (yours) / delete (yours) · ✔️✔️ seen receipts</div>
+
+    <button id="deleteRoom">
+        🗑 dissolve room
+    </button>
+
 </div>
+
+
+<!-- =========================
+     MESSAGES
+========================= -->
+
+<div id="messages"></div>
+
+
+<!-- =========================
+     INPUT
+========================= -->
+
+<div id="inputArea">
+
+    <div
+        id="actionBarContainer"
+        class="action-bar"
+        style="display: none;"
+    ></div>
+
+    <div class="input-row">
+
+        <!-- TEXTAREA allows multiple lines -->
+        <textarea
+            id="messageInput"
+            placeholder="Type your message..."
+            autocomplete="off"
+            rows="1"
+        ></textarea>
+
+        <button id="sendBtn">
+            ➤ Send
+        </button>
+
+    </div>
+
+    <div class="small-note">
+        🖱️ Right-click / hold message → reply / edit / delete
+        · Enter = new line · Ctrl + Enter = send
+    </div>
+
+</div>
+
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getDatabase, ref, push, onValue, remove, update, get, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAbWxvnQYU3APJ4jLuD-mqErVaWkvm7_uY",
-        authDomain: "talknest-ce517.firebaseapp.com",
-        projectId: "talknest-ce517",
-        storageBucket: "talknest-ce517.firebasestorage.app",
-        messagingSenderId: "662966226921",
-        appId: "1:662966226921:web:195bcf44b7e40252e54578"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 
-    // Session
-    const isJoined = localStorage.getItem("IsJoined");
-    const roomId = localStorage.getItem("roomId");
-    const userName = localStorage.getItem("userName");
-    const isHost = localStorage.getItem("isHost");
-    if (isJoined !== "true" || !roomId || !userName) window.location.href = "index.html";
+import {
+    getDatabase,
+    ref,
+    push,
+    onValue,
+    remove,
+    update,
+    get,
+    set
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-    const messagesRef = ref(db, `TalkNest/${roomId}/messages`);
-    const roomRootRef = ref(db, `TalkNest/${roomId}`);
-    const messagesDiv = document.getElementById("messages");
-    const messageInput = document.getElementById("messageInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const actionBarContainer = document.getElementById("actionBarContainer");
-    document.getElementById("roomInfo").innerText = roomId;
-    document.getElementById("userInfo").innerText = userName;
 
-    // Global state
-    let readyReply = null;       // stores messageId we are replying to
-    let editReady = null;        // stores messageId & original data for editing
-    let currentMenu = null;      // action menu dom element
-    let holdTimeout = null;
-    let activeMsgElement = null;
+/* =========================
+   FIREBASE
+========================= */
 
-    function formatTime(timestamp) { return timestamp ? new Date(timestamp).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true }) : ""; }
+const firebaseConfig = {
 
-    // Update action bar UI (reply/edit visual)
-    function updateActionBarUI() {
-        if (readyReply || editReady) {
-            actionBarContainer.style.display = "flex";
-            if (readyReply) {
-                actionBarContainer.innerHTML = `<div class="action-indicator">↩️ Replying to message <span style="color:#9bbaff;">#${readyReply.slice(-6)}</span></div>
-                    <button class="cancel-action" id="cancelReplyBtn">✖ Cancel</button>`;
-                document.getElementById("cancelReplyBtn")?.addEventListener("click", () => { readyReply = null; updateActionBarUI(); });
-            } else if (editReady) {
-                actionBarContainer.innerHTML = `<div class="action-indicator">✏️ Editing message <span style="color:#9bbaff;">#${editReady.slice(-6)}</span></div>
-                    <button class="cancel-action" id="cancelEditBtn">✖ Cancel</button>`;
-                document.getElementById("cancelEditBtn")?.addEventListener("click", () => { editReady = null; updateActionBarUI(); messageInput.value = ""; messageInput.focus(); });
-            }
-        } else {
-            actionBarContainer.style.display = "none";
-            actionBarContainer.innerHTML = "";
-        }
-    }
+    apiKey: "AIzaSyAbWxvnQYU3APJ4jLuD-mqErVaWkvm7_uY",
 
-    // remove action menu
-    function removeMenu() { if (currentMenu) { currentMenu.remove(); currentMenu = null; } }
-    function clearHoldTimer() { if (holdTimeout) { clearTimeout(holdTimeout); holdTimeout = null; } }
+    authDomain:
+        "talknest-ce517.firebaseapp.com",
 
-    // Show action menu at coordinates
-    function showActionMenu(x, y, messageElement, msgId, isOwnMessage, originalText) {
-        removeMenu();
-        const menu = document.createElement("div");
-        menu.className = "action-menu";
-        menu.style.left = `${x}px`;
-        menu.style.top = `${y - 50}px`;
-        
-        // reply always available
-        const replyBtn = document.createElement("button");
-        replyBtn.innerHTML = "💬 Reply";
-        replyBtn.className = "action-btn reply-action";
-        replyBtn.onclick = (e) => { e.stopPropagation(); readyReply = msgId; editReady = null; updateActionBarUI(); removeMenu(); messageInput.focus(); };
-        menu.appendChild(replyBtn);
-        
-        if (isOwnMessage) {
-            const editBtn = document.createElement("button");
-            editBtn.innerHTML = "✏️ Edit";
-            editBtn.className = "action-btn edit-action";
-            editBtn.onclick = (e) => { e.stopPropagation(); 
-                editReady = msgId; readyReply = null; 
-                // set input value to current message text for editing
-                const currentTextElement = messageElement.querySelector('.msg-text');
-                if (currentTextElement) messageInput.value = currentTextElement.innerText;
-                updateActionBarUI(); removeMenu(); messageInput.focus(); 
-            };
-            menu.appendChild(editBtn);
-            
-            const deleteBtn = document.createElement("button");
-            deleteBtn.innerHTML = "🗑 Delete";
-            deleteBtn.className = "action-btn delete-action";
-            deleteBtn.onclick = async (e) => { e.stopPropagation(); 
-                if (confirm("Delete this message?")) {
-                    await remove(ref(db, `TalkNest/${roomId}/messages/${msgId}`));
+    projectId:
+        "talknest-ce517",
+
+    storageBucket:
+        "talknest-ce517.firebasestorage.app",
+
+    messagingSenderId:
+        "662966226921",
+
+    appId:
+        "1:662966226921:web:195bcf44b7e40252e54578"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+
+/* =========================
+   SESSION
+========================= */
+
+const isJoined =
+    localStorage.getItem("IsJoined");
+
+const roomId =
+    localStorage.getItem("roomId");
+
+const userName =
+    localStorage.getItem("userName");
+
+const isHost =
+    localStorage.getItem("isHost");
+
+
+if (
+    isJoined !== "true" ||
+    !roomId ||
+    !userName
+) {
+    window.location.href = "index.html";
+}
+
+
+/* =========================
+   DATABASE REFERENCES
+========================= */
+
+const messagesRef =
+    ref(
+        db,
+        `TalkNest/${roomId}/messages`
+    );
+
+const roomRootRef =
+    ref(
+        db,
+        `TalkNest/${roomId}`
+    );
+
+
+/* =========================
+   DOM
+========================= */
+
+const messagesDiv =
+    document.getElementById("messages");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendBtn =
+    document.getElementById("sendBtn");
+
+const actionBarContainer =
+    document.getElementById(
+        "actionBarContainer"
+    );
+
+
+document.getElementById("roomInfo")
+    .innerText = roomId;
+
+document.getElementById("userInfo")
+    .innerText = userName;
+
+
+/* =========================
+   GLOBAL STATE
+========================= */
+
+let readyReply = null;
+
+let editReady = null;
+
+let currentMenu = null;
+
+
+/* =========================
+   TIME
+========================= */
+
+function formatTime(timestamp) {
+
+    return timestamp
+
+        ? new Date(timestamp)
+            .toLocaleTimeString(
+                [],
+                {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true
                 }
-                removeMenu(); 
+            )
+
+        : "";
+}
+
+
+/* =========================
+   ACTION BAR
+========================= */
+
+function updateActionBarUI() {
+
+    if (readyReply || editReady) {
+
+        actionBarContainer.style.display =
+            "flex";
+
+
+        if (readyReply) {
+
+            actionBarContainer.innerHTML = `
+
+                <div class="action-indicator">
+
+                    ↩️ Replying to message
+
+                    <span
+                        style="color:#9bbaff;"
+                    >
+                        #${readyReply.slice(-6)}
+                    </span>
+
+                </div>
+
+                <button
+                    class="cancel-action"
+                    id="cancelReplyBtn"
+                >
+                    ✖ Cancel
+                </button>
+
+            `;
+
+
+            document
+                .getElementById(
+                    "cancelReplyBtn"
+                )
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        readyReply = null;
+
+                        updateActionBarUI();
+
+                    }
+                );
+
+        }
+
+        else if (editReady) {
+
+            actionBarContainer.innerHTML = `
+
+                <div class="action-indicator">
+
+                    ✏️ Editing message
+
+                    <span
+                        style="color:#9bbaff;"
+                    >
+                        #${editReady.slice(-6)}
+                    </span>
+
+                </div>
+
+                <button
+                    class="cancel-action"
+                    id="cancelEditBtn"
+                >
+                    ✖ Cancel
+                </button>
+
+            `;
+
+
+            document
+                .getElementById(
+                    "cancelEditBtn"
+                )
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        editReady = null;
+
+                        updateActionBarUI();
+
+                        messageInput.value = "";
+
+                        messageInput.focus();
+
+                    }
+                );
+        }
+
+    }
+
+    else {
+
+        actionBarContainer.style.display =
+            "none";
+
+        actionBarContainer.innerHTML =
+            "";
+    }
+}
+
+
+/* =========================
+   REMOVE MENU
+========================= */
+
+function removeMenu() {
+
+    if (currentMenu) {
+
+        currentMenu.remove();
+
+        currentMenu = null;
+    }
+}
+
+
+/* =========================
+   SHOW ACTION MENU
+========================= */
+
+function showActionMenu(
+    x,
+    y,
+    messageElement,
+    msgId,
+    isOwnMessage,
+    originalText
+) {
+
+    removeMenu();
+
+
+    const menu =
+        document.createElement("div");
+
+    menu.className =
+        "action-menu";
+
+
+    /*
+       Keep menu inside viewport.
+       This is especially useful on PC
+       when right-clicking near an edge.
+    */
+
+    const menuWidth = 165;
+    const menuHeight = isOwnMessage
+        ? 130
+        : 48;
+
+    const safeX = Math.min(
+        x,
+        window.innerWidth - menuWidth - 8
+    );
+
+    const safeY = Math.min(
+        y,
+        window.innerHeight - menuHeight - 8
+    );
+
+
+    menu.style.left =
+        `${Math.max(8, safeX)}px`;
+
+    menu.style.top =
+        `${Math.max(8, safeY)}px`;
+
+
+    /* =========================
+       REPLY
+    ========================= */
+
+    const replyBtn =
+        document.createElement("button");
+
+    replyBtn.innerHTML =
+        "💬 Reply";
+
+    replyBtn.className =
+        "action-btn reply-action";
+
+
+    replyBtn.onclick = (e) => {
+
+        e.stopPropagation();
+
+        readyReply = msgId;
+
+        editReady = null;
+
+        updateActionBarUI();
+
+        removeMenu();
+
+        messageInput.focus();
+    };
+
+
+    menu.appendChild(replyBtn);
+
+
+    /* =========================
+       OWN MESSAGE ACTIONS
+    ========================= */
+
+    if (isOwnMessage) {
+
+
+        /* EDIT */
+
+        const editBtn =
+            document.createElement("button");
+
+        editBtn.innerHTML =
+            "✏️ Edit";
+
+        editBtn.className =
+            "action-btn edit-action";
+
+
+        editBtn.onclick = (e) => {
+
+            e.stopPropagation();
+
+            editReady = msgId;
+
+            readyReply = null;
+
+
+            const currentTextElement =
+                messageElement.querySelector(
+                    ".msg-text"
+                );
+
+
+            if (currentTextElement) {
+
+                messageInput.value =
+                    currentTextElement.innerText;
+            }
+
+
+            updateActionBarUI();
+
+            removeMenu();
+
+            messageInput.focus();
+
+            autoResizeTextarea();
+        };
+
+
+        menu.appendChild(editBtn);
+
+
+        /* DELETE */
+
+        const deleteBtn =
+            document.createElement("button");
+
+        deleteBtn.innerHTML =
+            "🗑 Delete";
+
+        deleteBtn.className =
+            "action-btn delete-action";
+
+
+        deleteBtn.onclick =
+            async (e) => {
+
+                e.stopPropagation();
+
+
+                if (
+                    confirm(
+                        "Delete this message?"
+                    )
+                ) {
+
+                    await remove(
+                        ref(
+                            db,
+                            `TalkNest/${roomId}/messages/${msgId}`
+                        )
+                    );
+                }
+
+
+                removeMenu();
             };
-            menu.appendChild(deleteBtn);
-        }
-        
-        document.body.appendChild(menu);
-        currentMenu = menu;
-        const closeHandler = (e) => { if (!menu.contains(e.target)) { removeMenu(); document.removeEventListener('click', closeHandler); } };
-        setTimeout(() => document.addEventListener('click', closeHandler), 10);
+
+
+        menu.appendChild(deleteBtn);
     }
 
-    // Attach hold events to each message wrapper
-    function attachHoldEvents(wrapper, msgId, isOwn, originalText) {
-        let pressTimer = null;
-        let startX = 0, startY = 0;
-        
-        const handleStart = (e) => {
-            if (e.touches) { startX = e.touches[0].clientX; startY = e.touches[0].clientY; }
-            else { startX = e.clientX; startY = e.clientY; }
-            pressTimer = setTimeout(() => {
-                const msgElement = wrapper.querySelector('.msg');
-                let clientX = startX, clientY = startY;
-                if (e.touches) { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; }
-                else if (e.clientX) { clientX = e.clientX; clientY = e.clientY; }
-                showActionMenu(clientX, clientY, wrapper, msgId, isOwn, originalText);
+
+    document.body.appendChild(menu);
+
+    currentMenu = menu;
+
+
+    /*
+       Close when clicking somewhere else.
+    */
+
+    const closeHandler = (e) => {
+
+        if (!menu.contains(e.target)) {
+
+            removeMenu();
+
+            document.removeEventListener(
+                "click",
+                closeHandler
+            );
+        }
+    };
+
+
+    setTimeout(() => {
+
+        document.addEventListener(
+            "click",
+            closeHandler
+        );
+
+    }, 10);
+}
+
+
+/* =========================
+   MESSAGE INTERACTION
+========================= */
+
+function attachHoldEvents(
+    wrapper,
+    msgId,
+    isOwn,
+    originalText
+) {
+
+    let pressTimer = null;
+
+    let startX = 0;
+
+    let startY = 0;
+
+
+    /* =========================
+       START
+    ========================= */
+
+    const handleStart = (e) => {
+
+        /*
+           Ignore right mouse button here.
+           Right-click has its own handler.
+        */
+
+        if (
+            e.type === "mousedown" &&
+            e.button !== 0
+        ) {
+            return;
+        }
+
+
+        if (e.touches) {
+
+            startX =
+                e.touches[0].clientX;
+
+            startY =
+                e.touches[0].clientY;
+
+        }
+
+        else {
+
+            startX =
+                e.clientX;
+
+            startY =
+                e.clientY;
+        }
+
+
+        pressTimer =
+            setTimeout(() => {
+
+                showActionMenu(
+                    startX,
+                    startY,
+                    wrapper,
+                    msgId,
+                    isOwn,
+                    originalText
+                );
+
                 pressTimer = null;
+
             }, 500);
-        };
-        
-        const handleEnd = () => { if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; } };
-        const handleMove = (e) => {
-            if (!pressTimer) return;
-            let currentX, currentY;
-            if (e.touches) { currentX = e.touches[0].clientX; currentY = e.touches[0].clientY; }
-            else { currentX = e.clientX; currentY = e.clientY; }
-            if (Math.hypot(currentX - startX, currentY - startY) > 10) { clearTimeout(pressTimer); pressTimer = null; }
-        };
-        
-        wrapper.addEventListener('mousedown', handleStart);
-        wrapper.addEventListener('mouseup', handleEnd);
-        wrapper.addEventListener('mouseleave', handleEnd);
-        wrapper.addEventListener('mousemove', handleMove);
-        wrapper.addEventListener('touchstart', handleStart, { passive: false });
-        wrapper.addEventListener('touchend', handleEnd);
-        wrapper.addEventListener('touchmove', handleMove);
-    }
+    };
 
-    // Mark messages seen
-    async function markMessagesAsSeen() {
-        const snapshot = await get(ref(db, `TalkNest/${roomId}/messages`));
-        if (!snapshot.exists()) return;
-        const updates = {};
-        Object.entries(snapshot.val()).forEach(([msgId, msgData]) => {
-            if (msgData.from !== userName && (msgData.seen === false || msgData.seen === undefined)) {
-                updates[`TalkNest/${roomId}/messages/${msgId}/seen`] = true;
-            }
-        });
-        if (Object.keys(updates).length) await update(ref(db), updates);
-    }
 
-    // Render messages with reply preview, edited flag
-    function renderMessages(snapshot) {
-        if (!snapshot.exists()) { messagesDiv.innerHTML = '<div style="text-align:center;opacity:0.5;margin-top:2rem;">✨ no messages yet ✨</div>'; return; }
-        const messages = snapshot.val();
-        const sorted = Object.entries(messages).sort((a,b) => (a[1].time || 0) - (b[1].time || 0));
-        let html = '';
-        const msgMap = messages;
-        
-        window.copyText = async (event) => {  
-          let element = event.target;
-          element = element.querySelector(".msg-text");
-          const textToCopy = element.innerText;
+    /* =========================
+       END
+    ========================= */
 
-          try {
-            // 2. Use the modern Clipboard API
-            await navigator.clipboard.writeText(textToCopy);
-    
-            // 3. Always give feedback (Vital for UX)            
-            element.style.color = "green"; 
-            setTimeout(() => { element.style.color = ""; }, 1000);
+    const handleEnd = () => {
 
-          } catch (err) {
-            console.error("Failed to copy: ", err);
-          }
+        if (pressTimer) {
+
+            clearTimeout(pressTimer);
+
+            pressTimer = null;
         }
-        
-        for (const [msgId, msg] of sorted) {
-            const isOwn = (msg.from === userName);
-            const timeStr = formatTime(msg.time);
-            const seenStatus = msg.seen === true;
-            const safeText = escapeHtml(msg.text || '');
-            const editedFlag = msg.edited === true ? `<span class="edited-badge">(edited)</span>` : '';
-            let receiptHtml = '';
-            if (isOwn) receiptHtml = `<div class="receipt-status">${seenStatus ? '<span class="double-tick">✔️✔️ Seen</span>' : '<span>✔️ Sent</span>'}</div>`;
-            
-            let replyPreviewHtml = '';
-            if (msg.repliedFrom && msgMap[msg.repliedFrom]) {
-                const parentMsg = msgMap[msg.repliedFrom];
-                const parentText = parentMsg.text.length > 50 ? parentMsg.text.slice(0, 50)+'...' : parentMsg.text;
-                replyPreviewHtml = `<div class="reply-preview">↩️ Replying to ${escapeHtml(parentMsg.from)}: “${escapeHtml(parentText)}”</div>`;
+    };
+
+
+    /* =========================
+       MOVE
+    ========================= */
+
+    const handleMove = (e) => {
+
+        if (!pressTimer) return;
+
+
+        let currentX;
+
+        let currentY;
+
+
+        if (e.touches) {
+
+            currentX =
+                e.touches[0].clientX;
+
+            currentY =
+                e.touches[0].clientY;
+
+        }
+
+        else {
+
+            currentX =
+                e.clientX;
+
+            currentY =
+                e.clientY;
+        }
+
+
+        if (
+            Math.hypot(
+                currentX - startX,
+                currentY - startY
+            ) > 10
+        ) {
+
+            clearTimeout(pressTimer);
+
+            pressTimer = null;
+        }
+    };
+
+
+    /* =========================
+       MOBILE
+       LONG PRESS
+    ========================= */
+
+    wrapper.addEventListener(
+        "touchstart",
+        handleStart,
+        {
+            passive: false
+        }
+    );
+
+    wrapper.addEventListener(
+        "touchend",
+        handleEnd
+    );
+
+    wrapper.addEventListener(
+        "touchmove",
+        handleMove
+    );
+
+
+    /* =========================
+       PC
+       LEFT MOUSE HOLD
+    ========================= */
+
+    wrapper.addEventListener(
+        "mousedown",
+        handleStart
+    );
+
+    wrapper.addEventListener(
+        "mouseup",
+        handleEnd
+    );
+
+    wrapper.addEventListener(
+        "mouseleave",
+        handleEnd
+    );
+
+    wrapper.addEventListener(
+        "mousemove",
+        handleMove
+    );
+
+
+    /* =========================
+       PC
+       RIGHT CLICK
+    ========================= */
+
+    wrapper.addEventListener(
+        "contextmenu",
+        (e) => {
+
+            e.preventDefault();
+
+            showActionMenu(
+                e.clientX,
+                e.clientY,
+                wrapper,
+                msgId,
+                isOwn,
+                originalText
+            );
+        }
+    );
+}
+
+
+/* =========================
+   MARK AS SEEN
+========================= */
+
+async function markMessagesAsSeen() {
+
+    const snapshot =
+        await get(messagesRef);
+
+
+    if (!snapshot.exists()) return;
+
+
+    const updates = {};
+
+
+    Object.entries(
+        snapshot.val()
+    ).forEach(
+        ([msgId, msgData]) => {
+
+            if (
+                msgData.from !== userName &&
+                (
+                    msgData.seen === false ||
+                    msgData.seen === undefined
+                )
+            ) {
+
+                updates[
+                    `TalkNest/${roomId}/messages/${msgId}/seen`
+                ] = true;
             }
-            
-            const msgClass = isOwn ? 'right-msg' : 'left-msg';
-            html += `
-                <div class="msg-wrapper" ondblclick="copyText(event)" data-msgid="${msgId}" style="justify-content: ${isOwn ? 'flex-end' : 'flex-start'};">
-                    <div class="msg ${msgClass}">
-                        <div class="msg-header">
-                            <span class="sender-name">${escapeHtml(msg.from)}</span>
-                            <span class="timestamp">${timeStr} ${editedFlag}</span>
-                        </div>
-                        ${replyPreviewHtml}
-                        <div class="msg-text">${safeText}</div>
-                        ${receiptHtml}
-                    </div>
+        }
+    );
+
+
+    if (
+        Object.keys(updates).length
+    ) {
+
+        await update(
+            ref(db),
+            updates
+        );
+    }
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(str) {
+
+    if (!str) return "";
+
+    return str.replace(
+        /[&<>]/g,
+        m =>
+            ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;"
+            })[m]
+    );
+}
+
+
+/* =========================
+   COPY MESSAGE
+========================= */
+
+window.copyText = async (event) => {
+
+    let element = event.target;
+
+    element =
+        element.querySelector(".msg-text");
+
+
+    if (!element) return;
+
+
+    const textToCopy =
+        element.innerText;
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            textToCopy
+        );
+
+
+        element.style.opacity =
+            "0.5";
+
+
+        setTimeout(() => {
+
+            element.style.opacity =
+                "";
+
+        }, 1000);
+
+    }
+
+    catch (err) {
+
+        console.error(
+            "Failed to copy:",
+            err
+        );
+    }
+};
+
+
+/* =========================
+   RENDER MESSAGES
+========================= */
+
+function renderMessages(snapshot) {
+
+    if (!snapshot.exists()) {
+
+        messagesDiv.innerHTML = `
+            <div
+                style="
+                    text-align:center;
+                    opacity:0.5;
+                    margin-top:2rem;
+                "
+            >
+                ✨ no messages yet ✨
+            </div>
+        `;
+
+        return;
+    }
+
+
+    const messages =
+        snapshot.val();
+
+
+    const sorted =
+        Object.entries(messages)
+            .sort(
+                (a, b) =>
+                    (a[1].time || 0) -
+                    (b[1].time || 0)
+            );
+
+
+    let html = "";
+
+    const msgMap = messages;
+
+
+    for (
+        const [msgId, msg]
+        of sorted
+    ) {
+
+        const isOwn =
+            msg.from === userName;
+
+
+        const timeStr =
+            formatTime(msg.time);
+
+
+        const seenStatus =
+            msg.seen === true;
+
+
+        const safeText =
+            escapeHtml(msg.text || "");
+
+
+        const editedFlag =
+            msg.edited === true
+
+                ? `<span class="edited-badge">(edited)</span>`
+
+                : "";
+
+
+        let receiptHtml = "";
+
+
+        if (isOwn) {
+
+            receiptHtml = `
+
+                <div class="receipt-status">
+
+                    ${
+                        seenStatus
+
+                            ? `<span class="double-tick">
+                                ✔️✔️ Seen
+                              </span>`
+
+                            : `<span>
+                                ✔️ Sent
+                              </span>`
+                    }
+
                 </div>
             `;
-            
         }
-        messagesDiv.innerHTML = html;
-        
-        // attach hold events to each wrapper
-        document.querySelectorAll('.msg-wrapper').forEach(wrapper => {
-            const msgId = wrapper.dataset.msgid;
-            if (msgId && messages[msgId]) {
-                const isOwnMsg = messages[msgId].from === userName;
-                const originalText = messages[msgId].text;
-                attachHoldEvents(wrapper, msgId, isOwnMsg, originalText);
+
+
+        /* =========================
+           REPLY PREVIEW
+        ========================= */
+
+        let replyPreviewHtml = "";
+
+
+        if (
+            msg.repliedFrom &&
+            msgMap[msg.repliedFrom]
+        ) {
+
+            const parentMsg =
+                msgMap[msg.repliedFrom];
+
+
+            const parentText =
+                parentMsg.text || "";
+
+
+            const shortParentText =
+                parentText.length > 50
+
+                    ? parentText.slice(0, 50) + "..."
+
+                    : parentText;
+
+
+            replyPreviewHtml = `
+
+                <div class="reply-preview">
+
+                    ↩️ Replying to
+                    ${escapeHtml(parentMsg.from)}:
+
+                    “${escapeHtml(shortParentText)}”
+
+                </div>
+            `;
+        }
+
+
+        const msgClass =
+            isOwn
+                ? "right-msg"
+                : "left-msg";
+
+
+        html += `
+
+            <div
+
+                class="msg-wrapper"
+
+                ondblclick="copyText(event)"
+
+                data-msgid="${msgId}"
+
+                style="
+                    justify-content:
+                    ${isOwn
+                        ? "flex-end"
+                        : "flex-start"};
+                "
+            >
+
+                <div
+                    class="msg ${msgClass}"
+                >
+
+                    <div class="msg-header">
+
+                        <span
+                            class="sender-name"
+                        >
+                            ${escapeHtml(msg.from)}
+                        </span>
+
+
+                        <span
+                            class="timestamp"
+                        >
+                            ${timeStr}
+                            ${editedFlag}
+                        </span>
+
+                    </div>
+
+
+                    ${replyPreviewHtml}
+
+
+                    <!--
+                        pre-wrap is important:
+                        it displays multiple lines.
+                    -->
+
+                    <div class="msg-text">
+                        ${safeText}
+                    </div>
+
+
+                    ${receiptHtml}
+
+                </div>
+
+            </div>
+        `;
+    }
+
+
+    messagesDiv.innerHTML =
+        html;
+
+
+    /* =========================
+       ATTACH EVENTS
+    ========================= */
+
+    document
+        .querySelectorAll(
+            ".msg-wrapper"
+        )
+        .forEach(wrapper => {
+
+            const msgId =
+                wrapper.dataset.msgid;
+
+
+            if (
+                msgId &&
+                messages[msgId]
+            ) {
+
+                const isOwnMsg =
+                    messages[msgId].from === userName;
+
+
+                const originalText =
+                    messages[msgId].text;
+
+
+                attachHoldEvents(
+                    wrapper,
+                    msgId,
+                    isOwnMsg,
+                    originalText
+                );
             }
         });
-        
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        setTimeout(() => markMessagesAsSeen(), 200);
+
+
+    messagesDiv.scrollTop =
+        messagesDiv.scrollHeight;
+
+
+    setTimeout(
+        () => markMessagesAsSeen(),
+        200
+    );
+}
+
+
+/* =========================
+   REALTIME LISTENER
+========================= */
+
+onValue(
+    messagesRef,
+    snapshot => {
+
+        renderMessages(snapshot);
+
     }
-    
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
-    
-    // listen realtime
-    onValue(messagesRef, (snapshot) => { renderMessages(snapshot); });
-    
-    // SEND logic: handles reply, edit, or normal
-    async function sendMessageHandler() {
-        const text = messageInput.value.trim();
-        if (!text) return;
-        if (userName == "Guest") return;
-        
-        // EDIT MODE
-        if (editReady) {
-            const editMsgRef = ref(db, `TalkNest/${roomId}/messages/${editReady}`);
-            const snap = await get(editMsgRef);
-            if (snap.exists() && snap.val().from === userName) {
-                await update(editMsgRef, { text: text, edited: true, time: Date.now() });
-                messageInput.value = "";
-                editReady = null;
-                updateActionBarUI();
-                messageInput.focus();
-            } else { alert("Cannot edit: message not found or not yours"); editReady = null; updateActionBarUI(); }
-            return;
+);
+
+
+/* =========================
+   AUTO RESIZE TEXTAREA
+========================= */
+
+function autoResizeTextarea() {
+
+    messageInput.style.height =
+        "auto";
+
+
+    const newHeight =
+        Math.min(
+            messageInput.scrollHeight,
+            160
+        );
+
+
+    messageInput.style.height =
+        `${newHeight}px`;
+}
+
+
+messageInput.addEventListener(
+    "input",
+    autoResizeTextarea
+);
+
+
+/* =========================
+   SEND MESSAGE
+========================= */
+
+async function sendMessageHandler() {
+
+    const text =
+        messageInput.value.trim();
+
+
+    if (!text) return;
+
+
+    if (userName === "Guest") return;
+
+
+    /* =========================
+       EDIT MODE
+    ========================= */
+
+    if (editReady) {
+
+        const editMsgRef =
+            ref(
+                db,
+                `TalkNest/${roomId}/messages/${editReady}`
+            );
+
+
+        const snap =
+            await get(editMsgRef);
+
+
+        if (
+            snap.exists() &&
+            snap.val().from === userName
+        ) {
+
+            await update(
+                editMsgRef,
+                {
+                    text: text,
+                    edited: true,
+                    time: Date.now()
+                }
+            );
+
+
+            messageInput.value = "";
+
+            editReady = null;
+
+            updateActionBarUI();
+
+            messageInput.focus();
+
+            autoResizeTextarea();
+
         }
-        
-        // Normal or reply
-        const newMsgRef = push(messagesRef);
-        const payload = { from: userName, text: text, time: Date.now(), seen: false };
-        if (readyReply) { payload.repliedFrom = readyReply; }
-        await set(newMsgRef, payload);
-        if (readyReply) readyReply = null;
-        updateActionBarUI();
-        messageInput.value = "";
-        messageInput.focus();
+
+        else {
+
+            alert(
+                "Cannot edit: message not found or not yours"
+            );
+
+
+            editReady = null;
+
+            updateActionBarUI();
+        }
+
+
+        return;
     }
-    
-    sendBtn.addEventListener("click", sendMessageHandler);
-    messageInput.addEventListener("keypress", (e) => { if (e.key === "Enter") { e.preventDefault(); sendMessageHandler(); } });
-    
-    // Delete room (room dissolved)
-    document.getElementById("deleteRoom").addEventListener("click", async () => {
-        if(isHost == "false"){
-            alert("only Host or creater can delete!")
-            return;
-        } 
-        if (confirm("⚠️ Permanently delete entire room?")) {           
-            await remove(roomRootRef);
-            localStorage.clear();
-            window.location.href = "index.html";
-        }
-    });
-    
-    // check if room deleted
-    onValue(ref(db, `TalkNest/${roomId}`), (snap) => { if (!snap.exists()) { alert("Room deleted by host."); localStorage.clear(); window.location.href = "index.html"; } });
-    
-    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") markMessagesAsSeen(); });
-    window.addEventListener("focus", () => markMessagesAsSeen());
-    setTimeout(() => markMessagesAsSeen(), 600);
-    
-    // Additional tap outside menu removal
-    window.addEventListener('click', (e) => { if (currentMenu && !currentMenu.contains(e.target)) removeMenu(); });
-    
+
+
+    /* =========================
+       NORMAL / REPLY
+    ========================= */
+
+    const newMsgRef =
+        push(messagesRef);
+
+
+    const payload = {
+
+        from: userName,
+
+        text: text,
+
+        time: Date.now(),
+
+        seen: false
+    };
+
+
+    if (readyReply) {
+
+        payload.repliedFrom =
+            readyReply;
+    }
+
+
+    await set(
+        newMsgRef,
+        payload
+    );
+
+
+    if (readyReply) {
+
+        readyReply = null;
+    }
+
+
     updateActionBarUI();
-    if(userName == "Guest") {        
-        messageInput.disabled = true;
-        sendBtn.disabled = true;
-        document.querySelector(".small-note").textContent = "Guests can only see the message. you can't write message!!! ";
+
+
+    messageInput.value = "";
+
+    autoResizeTextarea();
+
+    messageInput.focus();
+}
+
+
+/* =========================
+   SEND BUTTON
+========================= */
+
+sendBtn.addEventListener(
+    "click",
+    sendMessageHandler
+);
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+/*
+   Enter:
+      new line
+
+   Ctrl + Enter:
+      send
+
+   This makes multi-line messages
+   natural on PC.
+*/
+
+messageInput.addEventListener(
+    "keydown",
+    (e) => {
+
+        if (
+            e.key === "Enter" &&
+            e.ctrlKey
+        ) {
+
+            e.preventDefault();
+
+            sendMessageHandler();
+        }
     }
+);
+
+
+/* =========================
+   DELETE ROOM
+========================= */
+
+document
+    .getElementById("deleteRoom")
+    .addEventListener(
+        "click",
+        async () => {
+
+            if (isHost === "false") {
+
+                alert(
+                    "Only Host or creator can delete!"
+                );
+
+                return;
+            }
+
+
+            if (
+                confirm(
+                    "⚠️ Permanently delete entire room?"
+                )
+            ) {
+
+                await remove(
+                    roomRootRef
+                );
+
+
+                localStorage.clear();
+
+                window.location.href =
+                    "index.html";
+            }
+        }
+    );
+
+
+/* =========================
+   CHECK ROOM DELETED
+========================= */
+
+onValue(
+    ref(
+        db,
+        `TalkNest/${roomId}`
+    ),
+
+    snap => {
+
+        if (!snap.exists()) {
+
+            alert(
+                "Room deleted by host."
+            );
+
+
+            localStorage.clear();
+
+            window.location.href =
+                "index.html";
+        }
+    }
+);
+
+
+/* =========================
+   VISIBILITY
+========================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            markMessagesAsSeen();
+        }
+    }
+);
+
+
+window.addEventListener(
+    "focus",
+    () => markMessagesAsSeen()
+);
+
+
+setTimeout(
+    () => markMessagesAsSeen(),
+    600
+);
+
+
+/* =========================
+   CLOSE MENU
+========================= */
+
+window.addEventListener(
+    "click",
+    (e) => {
+
+        if (
+            currentMenu &&
+            !currentMenu.contains(e.target)
+        ) {
+
+            removeMenu();
+        }
+    }
+);
+
+
+/* =========================
+   INITIAL UI
+========================= */
+
+updateActionBarUI();
+
+
+/* =========================
+   GUEST MODE
+========================= */
+
+if (userName === "Guest") {
+
+    messageInput.disabled = true;
+
+    sendBtn.disabled = true;
+
+
+    document
+        .querySelector(".small-note")
+        .textContent =
+            "Guests can only see messages. You can't write messages!";
+}
+
 </script>
+
 </body>
 </html>
