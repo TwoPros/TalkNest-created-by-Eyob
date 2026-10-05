@@ -797,6 +797,24 @@ function removeMenu() {
    SHOW ACTION MENU
 ========================= */
 
+        window.copyText = async (event) => {    
+          let element = event.target;  
+          element = element.querySelector(".msg-text");  
+          const textToCopy = element.innerText;  
+  
+          try {  
+            // 2. Use the modern Clipboard API  
+            await navigator.clipboard.writeText(textToCopy);  
+  
+            // 3. Always give feedback (Vital for UX)              
+            element.style.color = "green";   
+            setTimeout(() => { element.style.color = ""; }, 1000);  
+  
+          } catch (err) {  
+            console.error("Failed to copy: ", err);  
+          }  
+        }  
+
 function showActionMenu(
     x,
     y,
